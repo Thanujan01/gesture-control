@@ -1,10 +1,13 @@
-# opencv-python-headless, NOT opencv-python — the headless build drops the GUI
-# libraries, which a server never uses. Saves ~200 MB, and on free tiers with
-# a 512 MB cap that difference decides whether the deploy fits at all.
-fastapi
-uvicorn[standard]
-mediapipe
-opencv-python-headless
-numpy
-scikit-learn
-joblib
+# Versions pinned to match the local environment the model was trained in.
+#
+# scikit-learn especially: a joblib pickle is not guaranteed to load across
+# minor versions. Render's default resolver installed 1.9.1 while the model
+# was trained on 1.7.2, which risks an unpickling failure at startup.
+# If you retrain on a newer scikit-learn, update this line to match.
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+mediapipe==0.10.21
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+scikit-learn==1.7.2
+joblib==1.4.2

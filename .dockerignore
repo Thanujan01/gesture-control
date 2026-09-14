@@ -1,0 +1,18 @@
+# Training artifacts — large, and the server never reads them
+dataset/
+web_images/
+landmarks.npz
+venv/
+__pycache__/
+*.pyc
+
+# Local-only tooling
+collect_server.py
+extract_landmarks.py
+train_classifier.py
+verify_dataset.py
+mirror_dataset.py
+import_web_images.py
+server_with_view.py
+*.ino
+*.ipynb
