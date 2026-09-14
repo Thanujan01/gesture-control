@@ -1,0 +1,10 @@
+# opencv-python-headless, NOT opencv-python — the headless build drops the GUI
+# libraries, which a server never uses. Saves ~200 MB, and on free tiers with
+# a 512 MB cap that difference decides whether the deploy fits at all.
+fastapi
+uvicorn[standard]
+mediapipe
+opencv-python-headless
+numpy
+scikit-learn
+joblib
