@@ -32,8 +32,9 @@ MODEL
   Note these are lowercase, unlike the pre-trained model's 'Open_Palm' style.
   GESTURE_NAMES[] in the sketch must match exactly, case included.
 
-  The model's own 'none' class is mapped to "None" in the response, so the
-  board treats it the same as no hand found.
+  The model's negative class (whatever it is named — see NO_GESTURE_LABELS)
+  is mapped to "None" in the response, so the board treats it the same as no
+  hand found.
 
 DETECTION
 ---------
@@ -77,6 +78,16 @@ from fastapi import FastAPI, Request
 MODEL_PATH = "gesture_recognizer.task"   # used only for hand detection
 CLASSIFIER_PATH = "gesture_model.pkl"    # your trained classifier
 MIN_CONFIDENCE = 0.70
+
+# Labels meaning "a hand, but not one of the real gestures". These are mapped
+# to "None" so the board treats them exactly like no hand found.
+#
+# This MUST cover whatever your negative class is actually called. If it does
+# not, the raw label reaches the board, which matches no gesture and therefore
+# never toggles an LED — but also never counts as "nothing", so the board's
+# re-arm logic stalls and it stops responding after the first toggle.
+# Several spellings are listed so a retrain with a renamed class still works.
+NO_GESTURE_LABELS = {"none", "no_gesture", "nogesture", "negative", "other"}
 
 app = FastAPI()
 
@@ -127,9 +138,9 @@ async def detect(request: Request):
 
         if conf > score:
             score = conf
-            # 'none' means "a hand, but not one of the 10" — same outcome
-            # for the board as nothing found at all.
-            if conf >= MIN_CONFIDENCE and name != "none":
+            # A negative-class hit means "a hand, but not a gesture" — same
+            # outcome for the board as nothing found at all.
+            if conf >= MIN_CONFIDENCE and name.lower() not in NO_GESTURE_LABELS:
                 label = name
             else:
                 label = "None"
