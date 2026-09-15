@@ -33,4 +33,9 @@ COPY . .
 # Render supplies $PORT. Shell form so the variable is expanded at runtime —
 # exec form would pass the literal string "$PORT" and the service would be
 # unreachable while appearing healthy.
-CMD uvicorn server:app --host 0.0.0.0 --port ${PORT:-8000}
+#
+# Running server_with_view rather than server: identical /detect behaviour,
+# plus /view and /latest so you can SEE what the board camera is sending.
+# That is the only reliable way to tell a camera problem from a model problem.
+# Switch back to "server:app" once everything works, to save a little memory.
+CMD uvicorn server_with_view:app --host 0.0.0.0 --port ${PORT:-8000}

@@ -13,6 +13,5 @@ train_classifier.py
 verify_dataset.py
 mirror_dataset.py
 import_web_images.py
-server_with_view.py
 *.ino
 *.ipynb
